@@ -1,5 +1,6 @@
 package p12.exercise;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -16,9 +17,9 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         this.queues = new HashMap<>();
     }
 
-    private void isQueueExists(final Q queue) {
+    private void queueExists(final Q queue) {
         if (queue == null) {
-            throw new IllegalArgumentException(
+            throw new NullPointerException(
                     "The queue parameter can not be null or empty");
         }
 
@@ -44,18 +45,16 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
 
     @Override
     public boolean isQueueEmpty(final Q queue) {
-        // sanity check
-        this.isQueueExists(queue);
+        this.queueExists(queue);
 
         final Queue<T> elements = this.queues.get(queue);
 
-        return elements == null ? true : elements.isEmpty();
+        return elements == null || elements.isEmpty();
     }
 
     @Override
     public void enqueue(final T elem, final Q queue) {
-        // sanity check
-        this.isQueueExists(queue);
+        this.queueExists(queue);
 
         final Queue<T> elements = this.queues.get(queue);
         elements.add(elem);
@@ -64,8 +63,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
 
     @Override
     public T dequeue(final Q queue) {
-        // sanity check
-        this.isQueueExists(queue);
+        this.queueExists(queue);
 
         return this.queues.get(queue).poll();
     }
@@ -94,8 +92,7 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
 
     @Override
     public List<T> dequeueAllFromQueue(final Q queue) {
-        // sanity check
-        this.isQueueExists(queue);
+        this.queueExists(queue);
 
         final Queue<T> elements = this.queues.get(queue);
         final List<T> copyOfElements = new LinkedList<>();
@@ -118,13 +115,10 @@ public class MultiQueueImpl<T, Q> implements MultiQueue<T, Q> {
         }
 
         // Add all elements from queue to the first available queue
-        for (Queue<T> firstQueueValue : this.queues.values()) {
-            for (T element : dequeueElements) {
-                firstQueueValue.add(element);
-            }
+        Queue<T> firstQueueValue = new ArrayList<Queue<T>>(this.queues.values()).getFirst();
 
-            break;
+        for (T element : dequeueElements) {
+            firstQueueValue.add(element);
         }
     }
-
 }
