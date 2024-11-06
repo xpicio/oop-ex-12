@@ -1,15 +1,9 @@
 # oop-ex-12
 
-Build it:
+Build and run it:
 
 ```bash
-./gradlew compileJava
-```
-
-Run it:
-
-```bash
-java -cp build/classes/java/main p12.exercise.Test
+./gradlew run
 ```
 
 Output:
